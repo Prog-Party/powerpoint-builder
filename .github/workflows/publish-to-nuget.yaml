@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '8.0' 
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Build the project
         run: dotnet build PowerPoint.Builder/PowerPoint.Builder.csproj --configuration Release
