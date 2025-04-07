@@ -22,10 +22,10 @@ jobs:
         run: dotnet restore
 
       - name: Build the project
-        run: dotnet build --configuration Release
+        run: dotnet build PowerPoint.Builder/PowerPoint.Builder.csproj --configuration Release
 
       - name: Pack the NuGet package
-        run: dotnet pack --configuration Release --no-build --output ./nupkgs
+        run: dotnet pack PowerPoint.Builder/PowerPoint.Builder.csproj --configuration Release --no-build --output ./nupkgs
 
       - name: Publish NuGet package
         env:
