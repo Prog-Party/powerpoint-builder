@@ -1,27 +1,35 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
+using PowerPoint.Builder.Slides.Parts;
 
 using P = DocumentFormat.OpenXml.Presentation;
-using D = DocumentFormat.OpenXml.Drawing;
-
-using PowerPoint.Builder.Slides.Parts;
 
 namespace PowerPoint.Builder.Slides;
 
 public class SlideBuilder
 {
     private List<SlidePartBuilder> _elements = new();
+    private List<ImageBuilder> _images = new();
 
-    public SlideBuilder AddText(string text, Action<TextBuilder> action)
+    public SlideBuilder AddText(string text, Action<TextBuilder>? action = null)
     {
         var builder = new TextBuilder(text);
-        action(builder);
+        action?.Invoke(builder);
         _elements.Add(builder);
         return this;
     }
 
-    internal Slide Build()
+    public SlideBuilder AddImage(Action<ImageBuilder>? action = null)
+    {
+        var builder = new ImageBuilder();
+        action?.Invoke(builder);
+        _images.Add(builder);
+        return this;
+    }
+
+    internal void Build(SlidePart slidePart)
     {
         var shapeTree = new ShapeTree(
                         new P.NonVisualGroupShapeProperties(
@@ -38,6 +46,10 @@ public class SlideBuilder
                 new CommonSlideData(shapeTree),
                 new ColorMapOverride(new MasterColorMapping())
             );
-        return slide;
+
+        slidePart.Slide = slide;
+
+        foreach (var image in _images)
+            image.Build(slidePart, shapeTree);
     }
 }

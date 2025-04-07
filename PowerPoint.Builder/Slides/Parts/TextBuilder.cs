@@ -12,12 +12,14 @@ namespace PowerPoint.Builder.Slides.Parts;
 public class TextBuilder : SlidePartBuilder
 {
     private string _text;
-    private PartPosition _position = PartPosition.Construct(0, 0);
-    private PartSize _size = PartSize.Construct(widthPercentage: 100, heightPercentage: 100);
+    private PartPosition _position;
+    private PartSize _size;
 
     internal TextBuilder(string text)
     {
         _text = text;
+        _position = PartPosition.Construct(0, 0);
+        _size = PartSize.Construct(widthPercentage: 100, heightPercentage: 100);
     }
 
     public TextBuilder SetPosition(PartPosition position)

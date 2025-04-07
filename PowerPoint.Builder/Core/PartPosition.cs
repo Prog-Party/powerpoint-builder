@@ -20,7 +20,7 @@ public class PartPosition
     {
         return new PartPosition(
             GetOffset(x, xPercentage),
-            GetOffset(y, yPercentage)
+            GetOffset(y, yPercentage) //todo: fix the yPercentage, something seems to be off
         );
     }
 

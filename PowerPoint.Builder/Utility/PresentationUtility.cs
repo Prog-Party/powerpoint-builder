@@ -1,7 +1,8 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
-using ÒpenXmlPresentation = DocumentFormat.OpenXml.Presentation.Presentation;
+using PowerPoint.Builder.Slides;
+using OpenXmlPresentation = DocumentFormat.OpenXml.Presentation.Presentation;
 
 namespace PowerPoint.Builder.Presentation;
 
@@ -19,24 +20,23 @@ internal class PresentationUtility
         using (var presentationDoc = CreatePresentationDocument())
         {
             var presentationPart = presentationDoc.AddPresentationPart();
-            presentationPart.Presentation = new ÒpenXmlPresentation();
+            presentationPart.Presentation = new OpenXmlPresentation();
 
             foreach (var slideBuilder in _properties.Slides)
             {
-                var slide = slideBuilder.Build();
-                AddSlide(presentationDoc, presentationPart, slide);
+                AddSlide(presentationDoc, presentationPart, slideBuilder);
             }
         }
     }
 
-    private static void AddSlide(PresentationDocument presentationDoc, PresentationPart presentationPart, Slide slide)
+    private static void AddSlide(PresentationDocument presentationDoc, PresentationPart presentationPart, SlideBuilder slideBuilder)
     {
         var length = presentationPart.GetPartsOfType<SlidePart>().Count();
 
         if (length == 0)
-            SlideUtility.ConstructFirstSlide(presentationPart, slide);
+            SlideUtility.ConstructFirstSlide(presentationPart, slideBuilder);
         else
-            SlideUtility.InsertNewSlide(presentationDoc, length, slide);
+            SlideUtility.InsertNewSlide(presentationDoc, length, slideBuilder);
     }
 
     private PresentationDocument CreatePresentationDocument()

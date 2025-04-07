@@ -11,4 +11,10 @@
     <ProjectReference Include="..\PowerPoint.Builder\PowerPoint.Builder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="lightbulb.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

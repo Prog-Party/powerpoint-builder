@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
+using PowerPoint.Builder.Slides;
 
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -9,7 +10,7 @@ namespace PowerPoint.Builder.Presentation;
 
 internal class SlideUtility
 {
-    internal static void ConstructFirstSlide(PresentationPart presentationPart, Slide slide)
+    internal static void ConstructFirstSlide(PresentationPart presentationPart, SlideBuilder slideBuilder)
     {
         var slideMasterIdList1 = new SlideMasterIdList(new SlideMasterId() { Id = (UInt32Value)2147483648U, RelationshipId = "rId1" });
         var slideIdList1 = new SlideIdList(
@@ -22,7 +23,8 @@ internal class SlideUtility
         presentationPart.Presentation.Append(slideMasterIdList1, slideIdList1, slideSize1, notesSize1, defaultTextStyle1);
 
         var slidePart1 = presentationPart.AddNewPart<SlidePart>("rId2");
-        slidePart1.Slide = slide;
+        slideBuilder.Build(slidePart1);
+
         var slideLayoutPart1 = CreateSlideLayoutPart(slidePart1);
         var slideMasterPart1 = CreateSlideMasterPart(slideLayoutPart1);
         var themePart1 = new ThemeUtility(slideMasterPart1).Build();
@@ -56,7 +58,7 @@ internal class SlideUtility
         return slideLayoutPart1;
     }
 
-    public static SlidePart InsertNewSlide(PresentationDocument presentationDocument, int position, Slide slide)
+    public static SlidePart InsertNewSlide(PresentationDocument presentationDocument, int position, SlideBuilder slideBuilder)
     {
         var presentationPart = presentationDocument.PresentationPart;
 
@@ -67,8 +69,7 @@ internal class SlideUtility
         // Create the slide part for the new slide.
         var slidePart = presentationPart.AddNewPart<SlidePart>();
 
-        // Assign the new slide to the new slide part
-        slidePart.Slide = slide;
+        slideBuilder.Build(slidePart);
 
         // Modify the slide ID list in the presentation part.
         // The slide ID list should not be null.
