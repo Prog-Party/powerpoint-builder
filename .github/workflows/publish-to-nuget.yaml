@@ -26,7 +26,6 @@ jobs:
 
       - name: Update version in .csproj file
         run: |
-          # Replace version in PowerPoint.Builder.csproj file
           sed -i 's|<Version>.*</Version>|<Version>1.0.${{ env.commit_count }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Restore dependencies
