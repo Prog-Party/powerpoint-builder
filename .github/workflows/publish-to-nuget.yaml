@@ -3,7 +3,7 @@ name: Build and Publish NuGet Package
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   build:
@@ -16,7 +16,18 @@ jobs:
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0' 
+          dotnet-version: '8.0'
+
+      - name: Get commit count
+        id: commit-count
+        run: |
+          commit_count=$(git rev-list --count HEAD)
+          echo "commit_count=$commit_count" >> $GITHUB_ENV
+
+      - name: Update version in .csproj file
+        run: |
+          # Replace version in PowerPoint.Builder.csproj file
+          sed -i 's|<Version>.*</Version>|<Version>1.0.${{ env.commit_count }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Restore dependencies
         run: dotnet restore PowerPoint.Builder/PowerPoint.Builder.csproj
