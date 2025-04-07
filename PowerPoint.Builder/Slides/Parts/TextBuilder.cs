@@ -11,16 +11,39 @@ namespace PowerPoint.Builder.Slides.Parts;
 
 public class TextBuilder : SlidePartBuilder
 {
-    private string _text;
+    private List<Paragraph> _paragraphs = new List<Paragraph>();
     private PartPosition _position;
     private PartSize _size;
 
-    internal TextBuilder(string text)
+    internal TextBuilder()
     {
-        _text = text;
         _position = PartPosition.Construct(0, 0);
         _size = PartSize.Construct(widthPercentage: 100, heightPercentage: 100);
     }
+
+    public TextBuilder AddParagraph(Action<ParagraphBuilder> builder)
+    {
+        var paragraphBuilder = new ParagraphBuilder();
+        builder(paragraphBuilder);
+        _paragraphs.Add(paragraphBuilder.Build());
+        return this;
+    }
+
+    public TextBuilder AddParagraph(string text)
+        => AddParagraph(paragraph => paragraph.AddText(text));
+
+    public TextBuilder AddParagraph(List<string> texts)
+        => AddParagraph(string.Join(Environment.NewLine, texts));
+
+    //public TextBuilder AddBulletList(List<string> bullets)
+    //{
+    //    _paragraphs.Add(new Paragraph(
+    //        new Run(
+    //            new D.Text(text)
+    //        )
+    //    ));
+    //    return this;
+    //}
 
     public TextBuilder SetPosition(PartPosition position)
     {
@@ -44,20 +67,25 @@ public class TextBuilder : SlidePartBuilder
 
         var randomId = new Random().Next(0, 1000000);
 
+        var bodyChildren = new List<OpenXmlElement>
+        {
+            new BodyProperties(),
+            new ListStyle(
+                new Level1ParagraphProperties {
+                    LeftMargin = 914400,   // 1 inch
+                    Indent = -457200       // -0.5 inch (pull text toward bullet)
+                }
+            )
+        };
+        bodyChildren.AddRange(_paragraphs.Cast<OpenXmlElement>());
+
         var shape = new P.Shape(
                             new P.NonVisualShapeProperties(
                                 new P.NonVisualDrawingProperties() { Id = UInt32Value.FromUInt32((uint)randomId), Name = "" },
                                 new P.NonVisualShapeDrawingProperties(new ShapeLocks() { NoGrouping = true }),
                                 new ApplicationNonVisualDrawingProperties(new PlaceholderShape())),
                             shapeProperties,
-                            new P.TextBody(
-                            new BodyProperties(),
-                            new ListStyle(),
-                            new Paragraph(
-                                new Run(
-                                    new D.Text(_text))
-
-                                )));
+                            new P.TextBody(bodyChildren));
 
         return shape;
     }

@@ -13,9 +13,9 @@ public class SlideBuilder
     private List<SlidePartBuilder> _elements = new();
     private List<ImageBuilder> _images = new();
 
-    public SlideBuilder AddText(string text, Action<TextBuilder>? action = null)
+    public SlideBuilder AddText(Action<TextBuilder>? action = null)
     {
-        var builder = new TextBuilder(text);
+        var builder = new TextBuilder();
         action?.Invoke(builder);
         _elements.Add(builder);
         return this;
