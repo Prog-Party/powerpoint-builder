@@ -21,7 +21,7 @@ jobs:
       - name: Get current timestamp
         id: timestamp
         run: |
-          timestamp=$(date +'%Y%m%d%H%M%S')
+          timestamp=$(date +'%Y%m%d.%H%M')
           echo "timestamp=$timestamp" >> $GITHUB_ENV
           
       - name: Update version in .csproj file
