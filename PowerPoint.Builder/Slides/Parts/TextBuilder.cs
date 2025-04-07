@@ -1,23 +1,46 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Presentation;
+using PowerPoint.Builder.Core;
+using PowerPoint.Builder.Slides;
 
 using D = DocumentFormat.OpenXml.Drawing;
 using P = DocumentFormat.OpenXml.Presentation;
 
-namespace PowerPoint.Builder.Text;
+namespace PowerPoint.Builder.Slides.Parts;
 
-internal class TextBuilder
+public class TextBuilder : SlidePartBuilder
 {
-    internal static OpenXmlElement Build(TextProperties properties)
+    private string _text;
+    private PartPosition _position = PartPosition.Construct(0, 0);
+    private PartSize _size = PartSize.Construct(widthPercentage: 100, heightPercentage: 100);
+
+    internal TextBuilder(string text)
+    {
+        _text = text;
+    }
+
+    public TextBuilder SetPosition(PartPosition position)
+    {
+        _position = position;
+        return this;
+    }
+
+    public TextBuilder SetSize(PartSize size)
+    {
+        _size = size;
+        return this;
+    }
+
+    internal override OpenXmlElement Build()
     {
         var shapeProperties = new P.ShapeProperties(
-                     new D.Transform2D(
-                         new D.Offset() { X = properties.XOffset, Y = properties.YOffset },
-                         new D.Extents() { Cx = properties.Width, Cy = properties.Height }
+                     new Transform2D(
+                         new Offset() { X = _position.XOffset, Y = _position.YOffset },
+                         new Extents() { Cx = _size.Width, Cy = _size.Height }
                      ));
 
-        int randomId = new Random().Next(0, 1000000);
+        var randomId = new Random().Next(0, 1000000);
 
         var shape = new P.Shape(
                             new P.NonVisualShapeProperties(
@@ -30,7 +53,7 @@ internal class TextBuilder
                             new ListStyle(),
                             new Paragraph(
                                 new Run(
-                                    new D.Text(properties.Text))
+                                    new D.Text(_text))
 
                                 )));
 

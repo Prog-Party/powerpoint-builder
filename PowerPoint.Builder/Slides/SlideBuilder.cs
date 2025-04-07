@@ -1,38 +1,27 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Presentation;
-using PowerPoint.Builder.Text;
 
 using P = DocumentFormat.OpenXml.Presentation;
 using D = DocumentFormat.OpenXml.Drawing;
 
-namespace PowerPoint.Builder.PowerPointSlide;
+using PowerPoint.Builder.Slides.Parts;
+
+namespace PowerPoint.Builder.Slides;
 
 public class SlideBuilder
 {
-    private List<OpenXmlElement> _elements = new();
+    private List<SlidePartBuilder> _elements = new();
 
-    public SlideBuilder AddText(
-        string text,
-        int x = 0,
-        int y = 0,
-        int? width = null,
-        int? height = null,
-        int? xPercent = null,
-        int? yPercent = null,
-        int? widthPercent = null,
-        int? heightPercent = null)
+    public SlideBuilder AddText(string text, Action<TextBuilder> action)
     {
-        var properties = new TextProperties(text,
-            xOffset: x, yOffset: y, width: width, height: height,
-            xOffsetPercentage: xPercent, yOffsetPercentage: yPercent,
-            widthPercentage: widthPercent, heightPercentage: heightPercent);
-
-        _elements.Add(TextBuilder.Build(properties));
+        var builder = new TextBuilder(text);
+        action(builder);
+        _elements.Add(builder);
         return this;
     }
 
-    public Slide Build()
+    internal Slide Build()
     {
         var shapeTree = new ShapeTree(
                         new P.NonVisualGroupShapeProperties(
@@ -43,7 +32,7 @@ public class SlideBuilder
                         );
 
         foreach (var element in _elements)
-            shapeTree.Append(element);
+            shapeTree.Append(element.Build());
 
         var slide = new Slide(
                 new CommonSlideData(shapeTree),

@@ -1,4 +1,4 @@
-﻿using PowerPoint.Builder.PowerPointSlide;
+﻿using PowerPoint.Builder.Slides;
 
 namespace PowerPoint.Builder;
 
