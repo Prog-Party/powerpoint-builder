@@ -17,16 +17,33 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0' 
-
-      - name: Get commit count
-        id: commit-count
+          
+      - name: Get the latest version from NuGet
+        id: get-latest-version
         run: |
-          commit_count=$(git rev-list --count HEAD)
-          echo "commit_count=$commit_count" >> $GITHUB_ENV
+          # Fetch the NuGet package page HTML
+          html_content=$(curl -s "https://www.nuget.org/packages/PowerPoint.Builder/")
+      
+          # Use grep and regular expressions to extract the version number from the HTML
+          latest_version=$(echo "$html_content" | grep -oP 'var packageVersion = "\K[0-9]+\.[0-9]+\.[0-9]+' )
+      
+          # Set the latest version as an environment variable
+          echo "latest_version=$latest_version" >> $GITHUB_ENV
+      
+          # Output the version for debugging
+          echo "Latest version: $latest_version"          
+          
+      - name: Calculate new version
+        id: new-version
+        run: |
+          IFS='.' read -r major minor patch <<<"${{ env.latest_version }}"
+          patch=$((patch + 1)) # Increment the patch version
+          new_version="${major}.${minor}.${patch}"
+          echo "new_version=$new_version" >> $GITHUB_ENV
           
       - name: Update version in .csproj file
         run: |
-          sed -i 's|<Version>.*</Version>|<Version>1.1.${{ env.commit_count }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
+          sed -i 's|<Version>.*</Version>|<Version>${{ env.new_version }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Restore dependencies
         run: dotnet restore PowerPoint.Builder/PowerPoint.Builder.csproj
