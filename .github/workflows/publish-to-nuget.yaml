@@ -43,7 +43,7 @@ jobs:
           
       - name: Update version in .csproj file
         run: |
-          sed -i 's|<Version>.*</Version>|<Version>1.1.${{ env.new_version }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
+          sed -i 's|<Version>.*</Version>|<Version>${{ env.new_version }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Restore dependencies
         run: dotnet restore PowerPoint.Builder/PowerPoint.Builder.csproj
