@@ -23,24 +23,10 @@ jobs:
         run: |
           commit_count=$(git rev-list --count HEAD)
           echo "commit_count=$commit_count" >> $GITHUB_ENV
-
-      - name: Get the latest version from NuGet
-        id: get-latest-version
-        run: |
-          latest_version=$(curl -s "https://api.nuget.org/v3/registration5-gz-semver2/PowerPoint.Builder/index.json" | jq -r '.items[0].catalogEntry.version')
-          echo "latest_version=$latest_version" >> $GITHUB_ENV
           
-      - name: Calculate new version
-        id: new-version
-        run: |
-          IFS='.' read -r major minor patch <<<"${{ env.latest_version }}"
-          patch=$((patch + 1)) # Increment the patch version
-          new_version="${major}.${minor}.${patch}"
-          echo "new_version=$new_version" >> $GITHUB_ENV
-
       - name: Update version in .csproj file
         run: |
-          sed -i 's|<Version>.*</Version>|<Version>${{ env.new_version }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
+          sed -i 's|<Version>.*</Version>|<Version>1.1.${{ env.commit_count }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Restore dependencies
         run: dotnet restore PowerPoint.Builder/PowerPoint.Builder.csproj
