@@ -1,6 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageId>PowerPoint.Builder</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Dennis Rosenbaum and Jens den Braber</Authors>
+    <Company>Prog Party</Company>
+    <Description>Wrapper around DocumentFormat.OpenXml to easily generate PowerPoint files</Description>
+    <PackageTags>PowerPoint, DocumentFormat.OpenXml, OpenXML, Open XML</PackageTags>
+  </PropertyGroup>
+  
+  <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -15,3 +24,4 @@
   </ItemGroup>
 
 </Project>
+
