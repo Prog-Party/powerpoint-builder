@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>PowerPoint.Builder</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Dennis Rosenbaum and Jens den Braber</Authors>
     <Company>Prog Party</Company>
     <Description>Wrapper around DocumentFormat.OpenXml to easily generate PowerPoint files</Description>
