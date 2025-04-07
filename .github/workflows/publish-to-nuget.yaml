@@ -18,15 +18,15 @@ jobs:
         with:
           dotnet-version: '8.0' 
 
-      - name: Get commit count
-        id: commit-count
+      - name: Get current timestamp
+        id: timestamp
         run: |
-          commit_count=$(git rev-list --count HEAD)
-          echo "commit_count=$commit_count" >> $GITHUB_ENV
+          timestamp=$(date +'%Y%m%d%H%M%S')
+          echo "timestamp=$timestamp" >> $GITHUB_ENV
           
       - name: Update version in .csproj file
         run: |
-          sed -i 's|<Version>.*</Version>|<Version>1.1.${{ env.commit_count }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
+          sed -i 's|<Version>.*</Version>|<Version>1.1.${{ env.timestamp }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Restore dependencies
         run: dotnet restore PowerPoint.Builder/PowerPoint.Builder.csproj
