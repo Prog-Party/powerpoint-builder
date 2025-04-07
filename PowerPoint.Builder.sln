@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerPoint.Builder", "PowerPoint.Builder\PowerPoint.Builder.csproj", "{0F13ADC9-449B-4EAD-AD70-1F2B2B3AEEB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatePowerPoint", "CreatePowerPoint\CreatePowerPoint.csproj", "{B33977E3-0BD4-4B56-B403-5B8AD08A4480}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F13ADC9-449B-4EAD-AD70-1F2B2B3AEEB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F13ADC9-449B-4EAD-AD70-1F2B2B3AEEB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F13ADC9-449B-4EAD-AD70-1F2B2B3AEEB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F13ADC9-449B-4EAD-AD70-1F2B2B3AEEB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B33977E3-0BD4-4B56-B403-5B8AD08A4480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B33977E3-0BD4-4B56-B403-5B8AD08A4480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B33977E3-0BD4-4B56-B403-5B8AD08A4480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B33977E3-0BD4-4B56-B403-5B8AD08A4480}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E0A1044D-18F7-4C2A-931B-3C8131B89AA7}
+	EndGlobalSection
+EndGlobal
