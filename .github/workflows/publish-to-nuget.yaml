@@ -40,6 +40,7 @@ jobs:
           patch=$((patch + 1)) # Increment the patch version
           new_version="${major}.${minor}.${patch}"
           echo "new_version=$new_version" >> $GITHUB_ENV
+          echo "New version: $new_version"          
           
       - name: Update version in .csproj file
         run: |
