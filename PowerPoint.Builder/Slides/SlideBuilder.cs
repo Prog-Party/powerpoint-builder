@@ -10,6 +10,7 @@ namespace PowerPoint.Builder.Slides;
 
 public class SlideBuilder
 {
+    private Slide? _slide;
     private List<SlidePartBuilder> _elements = new();
     private List<ImageBuilder> _images = new();
 
@@ -29,8 +30,17 @@ public class SlideBuilder
         return this;
     }
 
+    public void SetSlide(Slide slide)
+        => _slide = slide;
+
     internal void Build(SlidePart slidePart)
     {
+        if (_slide != null)
+        {
+            slidePart.Slide = _slide;
+            return;
+        }
+
         var shapeTree = new ShapeTree(
                         new P.NonVisualGroupShapeProperties(
                             new P.NonVisualDrawingProperties() { Id = (UInt32Value)1U, Name = "" },

@@ -35,16 +35,6 @@ public class TextBuilder : SlidePartBuilder
     public TextBuilder AddParagraph(List<string> texts)
         => AddParagraph(string.Join(Environment.NewLine, texts));
 
-    //public TextBuilder AddBulletList(List<string> bullets)
-    //{
-    //    _paragraphs.Add(new Paragraph(
-    //        new Run(
-    //            new D.Text(text)
-    //        )
-    //    ));
-    //    return this;
-    //}
-
     public TextBuilder SetPosition(PartPosition position)
     {
         _position = position;
