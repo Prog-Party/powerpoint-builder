@@ -55,4 +55,5 @@ new PowerPointBuilder(path)
             .SetImage("lightbulb.jpg")
             .SetPosition(PartPosition.Construct(xPercentage: 70, yPercentage: 50)))
         )
+    .AddSlide(slide: new DocumentFormat.OpenXml.Presentation.Slide())
     .Build();
