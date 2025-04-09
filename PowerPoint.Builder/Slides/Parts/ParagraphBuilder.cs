@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 using D = DocumentFormat.OpenXml.Drawing;
 

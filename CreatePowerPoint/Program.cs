@@ -18,6 +18,12 @@ var defaultLayout = new TemplateLayoutBuilder()
         .SetPosition(PartPosition.Construct(xPercentage: 10, yPercentage: 30))
         .SetSize(PartSize.Construct(widthPercentage: 80, heightPercentage: 50)));
 
+new PowerPointBuilder("powerpoint.pptx")
+   .AddSlide(layout: PowerPoint.Builder.Templates.TitleContentTemplate, slideAction: slide => slide
+       .AddText(text => text.AddParagraph("Hello World!"))
+       .AddImage(image => image.SetImage("lightbulb.jpg")))
+   .Build();
+
 new PowerPointBuilder(path)
     .AddSlide(layout: defaultLayout, slideAction: slide => slide
         .AddText(text => text.AddParagraph("My title"))

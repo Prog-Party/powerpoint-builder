@@ -1,7 +1,7 @@
-﻿using PowerPoint.Builder.Slides;
+﻿using DocumentFormat.OpenXml.Presentation;
 using PowerPoint.Builder.Presentation;
+using PowerPoint.Builder.Slides;
 using PowerPoint.Builder.Template;
-using DocumentFormat.OpenXml.Presentation;
 
 namespace PowerPoint.Builder;
 

@@ -1,6 +1,5 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Presentation;
 using PowerPoint.Builder.Slides;
 using OpenXmlPresentation = DocumentFormat.OpenXml.Presentation.Presentation;
 
