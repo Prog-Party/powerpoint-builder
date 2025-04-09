@@ -32,6 +32,8 @@ public class ParagraphBuilder
     {
         if (_properties == null)
             _properties = new ParagraphProperties();
+        _properties.LeftMargin = 342900; // 24pt in EMUs
+        _properties.Indent = -285750;     // -22.5pt hanging indent
         _properties.AddChild(new BulletFont { Typeface = "Arial" });
         _properties.AddChild(new CharacterBullet { Char = character });
 
@@ -42,6 +44,9 @@ public class ParagraphBuilder
     {
         if (_properties == null)
             _properties = new ParagraphProperties();
+
+        _properties.LeftMargin = 342900; // 24pt in EMUs
+        _properties.Indent = -285750;     // -22.5pt hanging indent
         _properties.AddChild(new AutoNumberedBullet()
         {
             Type = TextAutoNumberSchemeValues.ArabicPeriod, // e.g., 1.
@@ -51,10 +56,7 @@ public class ParagraphBuilder
     }
 
     public ParagraphBuilder SetProperties(ParagraphProperties properties)
-    {
-        _properties = properties;
-        return this;
-    }
+        => Execute(builder => builder._properties = properties);
 
     internal Paragraph Build()
     {
@@ -75,5 +77,11 @@ public class ParagraphBuilder
         }
 
         return paragraph;
+    }
+
+    private ParagraphBuilder Execute(Action<ParagraphBuilder> action)
+    {
+        action(this);
+        return this;
     }
 }

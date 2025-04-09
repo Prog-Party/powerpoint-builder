@@ -47,10 +47,13 @@ jobs:
           sed -i 's|<Version>.*</Version>|<Version>${{ env.new_version }}</Version>|' PowerPoint.Builder/PowerPoint.Builder.csproj
 
       - name: Restore dependencies
-        run: dotnet restore PowerPoint.Builder/PowerPoint.Builder.csproj
+        run: dotnet restore 
 
       - name: Build the project
-        run: dotnet build PowerPoint.Builder/PowerPoint.Builder.csproj --configuration Release
+        run: dotnet build --no-restore --configuration Release
+        
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --logger trx
 
       - name: Pack the NuGet package
         run: dotnet pack PowerPoint.Builder/PowerPoint.Builder.csproj --configuration Release --no-build --output ./nupkgs

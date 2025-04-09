@@ -19,21 +19,24 @@ public class PartPosition
         )
     {
         return new PartPosition(
-            GetOffset(x, xPercentage),
-            GetOffset(y, yPercentage) //todo: fix the yPercentage, something seems to be off
+            GetOffset(x, xPercentage, Constants.SlideWidth),
+            GetOffset(y, yPercentage, Constants.SlideHeight)
         );
     }
 
-    private static int GetOffset(int offset, int? OffsetPercentage)
+    private static int GetOffset(int offset, int? OffsetPercentage, int maxSize)
     {
-        if (OffsetPercentage is not null)
-        {
-            if (OffsetPercentage < 0 || OffsetPercentage > 100)
-            {
-                throw new ArgumentOutOfRangeException("Percentage Value must be between 0 and 100.");
-            }
-            return Constants.SlideWidth / 100 * OffsetPercentage.Value;
-        }
+        if (OffsetPercentage.HasValue)
+            return GetOffsetForPercentage(OffsetPercentage.Value, maxSize);
+
         return offset;
+    }
+
+    private static int GetOffsetForPercentage(int OffsetPercentage, int maxSize)
+    {
+        if (OffsetPercentage < 0 || OffsetPercentage > 100)
+            throw new ArgumentOutOfRangeException("Percentage Value must be between 0 and 100.");
+
+        return maxSize / 100 * OffsetPercentage;
     }
 }

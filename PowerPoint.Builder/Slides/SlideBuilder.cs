@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using PowerPoint.Builder.Slides.Parts;
+using PowerPoint.Builder.Template;
 
 using P = DocumentFormat.OpenXml.Presentation;
 
@@ -10,9 +11,15 @@ namespace PowerPoint.Builder.Slides;
 
 public class SlideBuilder
 {
-    private Slide? _slide;
+    private readonly Slide? _slide;
+    private readonly TemplateLayoutBuilder? _layout;
     private List<SlidePartBuilder> _elements = new();
-    private List<ImageBuilder> _images = new();
+
+    internal SlideBuilder(Slide? slide = null, TemplateLayoutBuilder? layout = null)
+    {
+        _slide = null;
+        _layout = layout;
+    }
 
     public SlideBuilder AddText(Action<TextBuilder>? action = null)
     {
@@ -26,12 +33,9 @@ public class SlideBuilder
     {
         var builder = new ImageBuilder();
         action?.Invoke(builder);
-        _images.Add(builder);
+        _elements.Add(builder);
         return this;
     }
-
-    public void SetSlide(Slide slide)
-        => _slide = slide;
 
     internal void Build(SlidePart slidePart)
     {
@@ -40,6 +44,7 @@ public class SlideBuilder
             slidePart.Slide = _slide;
             return;
         }
+        var hasLayout = _layout != null;
 
         var shapeTree = new ShapeTree(
                         new P.NonVisualGroupShapeProperties(
@@ -49,8 +54,21 @@ public class SlideBuilder
                         new GroupShapeProperties(new TransformGroup())
                         );
 
-        foreach (var element in _elements)
-            shapeTree.Append(element.Build());
+        var nonImageElements = _elements.Skip(hasLayout ? _layout!.GetCount() : 0).Where(e => e is not ImageBuilder);
+
+        for (var i = 0; i < _elements.Count; i++)
+        {
+            var element = _elements[i];
+            if (element is ImageBuilder)
+                continue; //skip image elements, these will be processed later
+
+            //if there is a layout, we need to add the items to the layout first
+            var hasLayoutToApply = hasLayout && i < _layout!.GetCount();
+            if (hasLayoutToApply)
+                _layout!.Build(i, element, slidePart, shapeTree);
+            else
+                element.Build(slidePart, shapeTree);
+        }
 
         var slide = new Slide(
                 new CommonSlideData(shapeTree),
@@ -59,7 +77,27 @@ public class SlideBuilder
 
         slidePart.Slide = slide;
 
-        foreach (var image in _images)
-            image.Build(slidePart, shapeTree);
+        for (var i = 0; i < _elements.Count; i++)
+        {
+            var element = _elements[i];
+            if (element is not ImageBuilder)
+                continue; //skip non image elements, these are added earlier already
+
+            //if there is a layout, we need to add the items to the layout first
+            var hasLayoutToApply = hasLayout && i < _layout!.GetCount();
+            if (hasLayoutToApply)
+                _layout!.Build(i, element, slidePart, shapeTree);
+            else
+                element.Build(slidePart, shapeTree);
+        }
+
+        // Add the empty layout parts
+        if (hasLayout)
+        {
+            for (var i = _elements.Count; i < _layout!.GetCount(); i++)
+            {
+                _layout.Build(i, slidePart, shapeTree);
+            }
+        }
     }
 }

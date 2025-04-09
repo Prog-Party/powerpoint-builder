@@ -1,12 +1,30 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using DocumentFormat.OpenXml.Presentation;
 using PowerPoint.Builder;
 using PowerPoint.Builder.Core;
+using PowerPoint.Builder.Template;
 
 string path = $"test_{DateTime.Now.ToString("yyyyMMddHHmmss")}.pptx";
 
 Stream imageStream = File.OpenRead("lightbulb.jpg");
 
+var defaultLayout = new TemplateLayoutBuilder()
+    .AddLayoutPart(part => part
+        .SetPlaceholderText("Title")
+        .SetPosition(PartPosition.Construct(xPercentage: 10, yPercentage: 10))
+        .SetSize(PartSize.Construct(widthPercentage: 80, heightPercentage: 10)))
+    .AddLayoutPart(part => part
+        .SetPlaceholderText("Content")
+        .SetPosition(PartPosition.Construct(xPercentage: 10, yPercentage: 30))
+        .SetSize(PartSize.Construct(widthPercentage: 80, heightPercentage: 50)));
+
 new PowerPointBuilder(path)
+    .AddSlide(layout: defaultLayout, slideAction: slide => slide
+        .AddText(text => text.AddParagraph("My title"))
+        .AddText(text => text.AddParagraph("My content")))
+    .AddSlide(layout: defaultLayout)
+    .AddSlide(slide => slide
+        .AddText(text => text.AddParagraph("Full width and full height test")))
     .AddSlide(slide => slide
         .AddText(text => text
             .AddParagraph("Text1")

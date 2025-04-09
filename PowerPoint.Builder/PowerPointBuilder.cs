@@ -1,5 +1,7 @@
 ﻿using PowerPoint.Builder.Slides;
 using PowerPoint.Builder.Presentation;
+using PowerPoint.Builder.Template;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace PowerPoint.Builder;
 
@@ -12,10 +14,10 @@ public class PowerPointBuilder
         _properties = new BuilderProperties(filePath);
     }
 
-    public PowerPointBuilder AddSlide(Action<SlideBuilder> slideAction)
+    public PowerPointBuilder AddSlide(Action<SlideBuilder>? slideAction = null, TemplateLayoutBuilder? layout = null, Slide? slide = null)
     {
-        var slideBuilder = new SlideBuilder();
-        slideAction(slideBuilder);
+        var slideBuilder = new SlideBuilder(slide, layout);
+        slideAction?.Invoke(slideBuilder);
         _properties.Slides.Add(slideBuilder);
         return this;
     }

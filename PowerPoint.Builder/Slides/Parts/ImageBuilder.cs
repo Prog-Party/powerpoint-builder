@@ -1,17 +1,16 @@
 ﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using PowerPoint.Builder.Core;
-using PowerPoint.Builder.Slides;
 using PowerPoint.Builder.Utility;
 
 using D = DocumentFormat.OpenXml.Drawing;
+
 using P = DocumentFormat.OpenXml.Presentation;
 
 namespace PowerPoint.Builder.Slides.Parts;
 
-public class ImageBuilder
+public class ImageBuilder : SlidePartBuilder
 {
     private string? _imageLocation;
     private Stream? _imageStream;
@@ -47,18 +46,12 @@ public class ImageBuilder
     }
 
     public ImageBuilder SetPosition(PartPosition position)
-    {
-        _position = position;
-        return this;
-    }
+        => Execute(builder => builder._position = position);
 
     public ImageBuilder SetSize(PartSize size)
-    {
-        _size = size;
-        return this;
-    }
+        => Execute(builder => builder._size = size);
 
-    internal void Build(SlidePart slidePart, ShapeTree tree)
+    internal override void Build(SlidePart slidePart, ShapeTree tree)
     {
         int randomId = new Random().Next(0, 1000000);
 
@@ -139,5 +132,11 @@ public class ImageBuilder
         });
 
         tree.Append(picture);
+    }
+
+    private ImageBuilder Execute(Action<ImageBuilder> action)
+    {
+        action(this);
+        return this;
     }
 }

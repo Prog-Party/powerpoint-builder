@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using PowerPoint.Builder.Core;
 using PowerPoint.Builder.Slides;
@@ -36,18 +37,12 @@ public class TextBuilder : SlidePartBuilder
         => AddParagraph(string.Join(Environment.NewLine, texts));
 
     public TextBuilder SetPosition(PartPosition position)
-    {
-        _position = position;
-        return this;
-    }
+        => Execute(builder => builder._position = position);
 
     public TextBuilder SetSize(PartSize size)
-    {
-        _size = size;
-        return this;
-    }
+        => Execute(builder => builder._size = size);
 
-    internal override OpenXmlElement Build()
+    internal override void Build(SlidePart slidePart, ShapeTree tree)
     {
         var shapeProperties = new P.ShapeProperties(
                      new Transform2D(
@@ -60,12 +55,7 @@ public class TextBuilder : SlidePartBuilder
         var bodyChildren = new List<OpenXmlElement>
         {
             new BodyProperties(),
-            new ListStyle(
-                new Level1ParagraphProperties {
-                    LeftMargin = 914400,   // 1 inch
-                    Indent = -457200       // -0.5 inch (pull text toward bullet)
-                }
-            )
+            new ListStyle()
         };
         bodyChildren.AddRange(_paragraphs.Cast<OpenXmlElement>());
 
@@ -77,6 +67,12 @@ public class TextBuilder : SlidePartBuilder
                             shapeProperties,
                             new P.TextBody(bodyChildren));
 
-        return shape;
+        tree.Append(shape);
+    }
+
+    private TextBuilder Execute(Action<TextBuilder> action)
+    {
+        action(this);
+        return this;
     }
 }
